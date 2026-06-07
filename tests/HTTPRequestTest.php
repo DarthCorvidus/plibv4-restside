@@ -18,15 +18,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test create from manual with GET method
 	 */
 	function testFromManualGet(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
 		$headers = ['Content-Type' => 'application/json'];
 		$queryParams = new ArrayFetch(['page' => '1', 'limit' => '10']);
-		
+		$requestBody = '';
+
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
+			$method,
+			$requestUri,
 			$headers,
 			$queryParams,
-			''
+			$requestBody
 		);
 		
 		$this->assertInstanceOf(HTTPRequest::class, $request);
@@ -39,13 +42,15 @@ final class HTTPRequestTest extends TestCase {
 	 * Test create from manual with POST method and body
 	 */
 	function testFromManualPost(): void {
+		$method = HTTPMethods::POST;
+		$requestUri = '/api/users';
 		$headers = ['Content-Type' => 'application/json'];
 		$queryParams = new ArrayFetch([]);
 		$body = '{"name":"John","email":"john@example.com"}';
 		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::POST,
-			'/api/users',
+			$method,
+			$requestUri,
 			$headers,
 			$queryParams,
 			$body
@@ -60,12 +65,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get method
 	 */
 	function testGetMethod(): void {
+		$method = HTTPMethods::PUT;
+		$requestUri = '/api/users/1';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::PUT,
-			'/api/users/1',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals(HTTPMethods::PUT, $request->getMethod());
@@ -75,12 +86,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get URI
 	 */
 	function testGetUri(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/products?category=electronics';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/products?category=electronics',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals('/api/products?category=electronics', $request->getUri());
@@ -90,17 +107,21 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get headers
 	 */
 	function testGetHeaders(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
 		$headers = [
 			'Content-Type' => 'application/json',
 			'Authorization' => 'Bearer token123'
 		];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
 		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
+			$method,
+			$requestUri,
 			$headers,
-			new ArrayFetch([]),
-			''
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals($headers, $request->getHeaders());
@@ -110,14 +131,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test has header returns true
 	 */
 	function testHasHeaderTrue(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
 		$headers = ['Content-Type' => 'application/json'];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
 		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
+			$method,
+			$requestUri,
 			$headers,
-			new ArrayFetch([]),
-			''
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertTrue($request->hasHeader('Content-Type'));
@@ -127,12 +152,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test has header returns false
 	 */
 	function testHasHeaderFalse(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertFalse($request->hasHeader('Authorization'));
@@ -142,14 +173,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get header
 	 */
 	function testGetHeader(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
 		$headers = ['Content-Type' => 'application/json'];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
 		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
+			$method,
+			$requestUri,
 			$headers,
-			new ArrayFetch([]),
-			''
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals('application/json', $request->getHeader('Content-Type'));
@@ -159,12 +194,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get header throws exception when not found
 	 */
 	function testGetHeaderNotFound(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->expectException(OutOfBoundsException::class);
@@ -176,14 +217,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get query params returns ArrayFetch
 	 */
 	function testGetQueryParams(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
+		$headers = [];
 		$queryParams = new ArrayFetch(['page' => '1', 'limit' => '10']);
+		$requestBody = '';
 		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
-			[],
+			$method,
+			$requestUri,
+			$headers,
 			$queryParams,
-			''
+			$requestBody
 		);
 		
 		$this->assertInstanceOf(ArrayFetch::class, $request->getQueryParams());
@@ -193,13 +238,17 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get body
 	 */
 	function testGetBody(): void {
+		$method = HTTPMethods::POST;
+		$requestUri = '/api/users';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
 		$body = '{"name":"Jane","email":"jane@example.com"}';
 		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::POST,
-			'/api/users',
-			[],
-			new ArrayFetch([]),
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
 			$body
 		);
 		
@@ -210,12 +259,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get empty body
 	 */
 	function testGetEmptyBody(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals('', $request->getBody());
@@ -232,14 +287,18 @@ final class HTTPRequestTest extends TestCase {
 			HTTPMethods::PATCH,
 			HTTPMethods::DELETE
 		];
+		$requestUri = '/api/resource';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
 		
 		foreach($methods as $method) {
 			$request = HTTPRequest::fromManual(
 				$method,
-				'/api/resource',
-				[],
-				new ArrayFetch([]),
-				''
+				$requestUri,
+				$headers,
+				$queryParams,
+				$requestBody
 			);
 			
 			$this->assertEquals($method, $request->getMethod());
@@ -250,12 +309,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get request path with simple path
 	 */
 	function testGetRequestPathSimple(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals('/api/users', $request->getRequestPath());
@@ -265,12 +330,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get request path with query string
 	 */
 	function testGetRequestPathWithQueryString(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/products?category=electronics&page=1';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/products?category=electronics&page=1',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals('/api/products', $request->getRequestPath());
@@ -280,12 +351,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get request path with root path
 	 */
 	function testGetRequestPathRoot(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals('/', $request->getRequestPath());
@@ -295,12 +372,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get request path with nested path
 	 */
 	function testGetRequestPathNested(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/v1/users/123/profile';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/v1/users/123/profile',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals('/api/v1/users/123/profile', $request->getRequestPath());
@@ -310,12 +393,18 @@ final class HTTPRequestTest extends TestCase {
 	 * Test get request path with query string and fragment
 	 */
 	function testGetRequestPathWithQueryAndFragment(): void {
+		$method = HTTPMethods::GET;
+		$requestUri = '/api/users?page=1#section';
+		$headers = [];
+		$queryParams = new ArrayFetch([]);
+		$requestBody = '';
+		
 		$request = HTTPRequest::fromManual(
-			HTTPMethods::GET,
-			'/api/users?page=1#section',
-			[],
-			new ArrayFetch([]),
-			''
+			$method,
+			$requestUri,
+			$headers,
+			$queryParams,
+			$requestBody
 		);
 		
 		$this->assertEquals('/api/users', $request->getRequestPath());

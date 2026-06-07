@@ -144,6 +144,24 @@ final class HTTPRequest {
 	}
 	
 	/**
+	 * Get Request Path
+	 *
+	 * Returns the path component of the request URI (without query string).
+	 *
+	 * @return string
+	 */
+	function getRequestPath(): string {
+		$path = parse_url($this->uri, PHP_URL_PATH);
+		if($path === false) {
+			throw new RuntimeException("Unable to parse request uri");
+		}
+		if($path === null or $path === "") {
+			return "/";
+		}
+	return $path;
+	}
+	
+	/**
 	 * Get Headers
 	 * 
 	 * Returns all request headers.

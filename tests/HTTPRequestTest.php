@@ -245,6 +245,81 @@ final class HTTPRequestTest extends TestCase {
 			$this->assertEquals($method, $request->getMethod());
 		}
 	}
+	
+	/**
+	 * Test get request path with simple path
+	 */
+	function testGetRequestPathSimple(): void {
+		$request = HTTPRequest::fromManual(
+			HTTPMethods::GET,
+			'/api/users',
+			[],
+			new ArrayFetch([]),
+			''
+		);
+		
+		$this->assertEquals('/api/users', $request->getRequestPath());
+	}
+	
+	/**
+	 * Test get request path with query string
+	 */
+	function testGetRequestPathWithQueryString(): void {
+		$request = HTTPRequest::fromManual(
+			HTTPMethods::GET,
+			'/api/products?category=electronics&page=1',
+			[],
+			new ArrayFetch([]),
+			''
+		);
+		
+		$this->assertEquals('/api/products', $request->getRequestPath());
+	}
+	
+	/**
+	 * Test get request path with root path
+	 */
+	function testGetRequestPathRoot(): void {
+		$request = HTTPRequest::fromManual(
+			HTTPMethods::GET,
+			'/',
+			[],
+			new ArrayFetch([]),
+			''
+		);
+		
+		$this->assertEquals('/', $request->getRequestPath());
+	}
+	
+	/**
+	 * Test get request path with nested path
+	 */
+	function testGetRequestPathNested(): void {
+		$request = HTTPRequest::fromManual(
+			HTTPMethods::GET,
+			'/api/v1/users/123/profile',
+			[],
+			new ArrayFetch([]),
+			''
+		);
+		
+		$this->assertEquals('/api/v1/users/123/profile', $request->getRequestPath());
+	}
+	
+	/**
+	 * Test get request path with query string and fragment
+	 */
+	function testGetRequestPathWithQueryAndFragment(): void {
+		$request = HTTPRequest::fromManual(
+			HTTPMethods::GET,
+			'/api/users?page=1#section',
+			[],
+			new ArrayFetch([]),
+			''
+		);
+		
+		$this->assertEquals('/api/users', $request->getRequestPath());
+	}
 }
 
 // Made with Bob
